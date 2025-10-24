@@ -5,17 +5,18 @@ services:
     ports:
       - "80:80"
     networks:
-      - Intern-Netzwerk
+      - intern-netzwerk
 
   dashboard:
     build: ./nginx-webserver
     volumes:
       - ./nginx-webserver/html:/usr/share/nginx/html
     networks:
-      - Intern-Netzwerk
-      
+      - intern-netzwerk
+      - db-netzwerk
 
   networks:
-    Intern-Netzwerk:
+    intern-netzwerk:
       driver: bridge 
- 
+    db-netzwerk:
+      driver: bridge
