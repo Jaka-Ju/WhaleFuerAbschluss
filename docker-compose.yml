@@ -13,10 +13,8 @@ services:
       - ./nginx-webserver/html:/usr/share/nginx/html
     networks:
       - intern-netzwerk
-      - db-netzwerk
+      
 
   networks:
     intern-netzwerk:
       driver: bridge 
-    db-netzwerk:
-      driver: bridge
