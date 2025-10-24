@@ -15,4 +15,8 @@ services:
       - Intern-Netzwerk
       - DB-Netzwerk
 
-  
+  networks:
+    Intern-Netzwerk:
+      driver: bridge 
+    DB-Netzwerk:
+      driver: bridge
