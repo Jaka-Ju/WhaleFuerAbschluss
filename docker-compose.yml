@@ -1,0 +1,18 @@
+
+services:
+  Proxy:
+    build: ./nginx-proxy
+    ports:
+      - "80:80"
+    networks:
+      - Intern-Netzwerk
+
+  Dashboard:
+    build: ./nginx-webserver
+    volumes:
+      - ./nginx-webserver/html:/usr/share/nginx/html
+    networks:
+      - Intern-Netzwerk
+      - DB-Netzwerk
+  
+  
