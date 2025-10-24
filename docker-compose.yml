@@ -13,10 +13,9 @@ services:
       - ./nginx-webserver/html:/usr/share/nginx/html
     networks:
       - Intern-Netzwerk
-      - DB-Netzwerk
+      
 
   networks:
     Intern-Netzwerk:
       driver: bridge 
-    DB-Netzwerk:
-      driver: bridge
+ 
