@@ -6,4 +6,4 @@ RUN apt install -y nginx
 RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/share/nginx/html
-CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"] 
+CMD ["sh", "-c", "php-fpm -F & nginx -g 'daemon off;'"] 
