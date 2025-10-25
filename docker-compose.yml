@@ -6,14 +6,14 @@ services:
       - "80:80"
     networks:
       - intern-netzwerk
-
+    restart: unless-stopped
   dashboard:
     build: ./nginx-webserver
     volumes:
       - ./nginx-webserver/html:/usr/share/nginx/html
     networks:
       - intern-netzwerk
-      
+    restart: unless-stopped  
 
 networks:
   intern-netzwerk:
