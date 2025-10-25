@@ -9,6 +9,9 @@ services:
     restart: unless-stopped
   dashboard:
     build: ./nginx-webserver
+    volumes:
+      - ./nginx-webserver/html:/usr/share/nginx/html
+      - ./nginx-webserver/default.conf:/etc/nginx/conf.d/default.conf
     networks:
       - intern-netzwerk
     restart: unless-stopped  
