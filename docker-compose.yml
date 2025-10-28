@@ -34,14 +34,6 @@ services:
       - db-netzwerk 
 
 
-  adminer: #  Der Datenbank-Manager
-    image: adminer
-    container_name: adminer-ui
-    restart: unless-stopped
-    networks:
-      - intern-netzwerk 
-      - db-netzwerk     
-
 networks:
   intern-netzwerk:
     driver: bridge 
