@@ -14,11 +14,44 @@ services:
       - intern-netzwerk 
       - db-netzwerk     
     restart: unless-stopped 
-    
+    depends_on:      
+      - db
 
+  db:
+    image: mariadb:latest 
+    container_name: datenbank
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_DATABASE: Lager_db # Wähle einen DB-Namen
+    
+    secrets: # Das Secret dem Service zuweisen
+      - db_root_password
+    volumes:
+      - db-daten:/var/lib/mysql # Speichert die Daten
+      - ./db-init:/docker-entrypoint-initdb.d
+    networks:
+      - db-netzwerk 
+
+
+  adminer: #  Der Datenbank-Manager
+    image: adminer
+    container_name: adminer-ui
+    restart: unless-stopped
+    networks:
+      - intern-netzwerk 
+      - db-netzwerk     
 
 networks:
   intern-netzwerk:
     driver: bridge 
   db-netzwerk:
     driver: bridge
+
+
+volumes:
+  db-daten: #dauerhafter Speicher auf Host
+  
+secrets:
+  db_root_password:
+    file: ./secrets/db_root_password.txt # Pfad zur erstellten Secret-Datei
