@@ -8,3 +8,4 @@ WORKDIR /var/www/html
 COPY html/ /var/www/html/
 
 # Apache-Port 80 ist bereits exposed
+RUN chown -R www-data:www-data /var/www/html/
