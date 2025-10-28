@@ -1,10 +1,11 @@
 
 services:
 
+
   dashboard:
     build: ./webserver
-    ports:
-      - "80:80" 
+    ports: # <--- DIESEN BLOCK HINZUFÜGEN
+      - "8080:80"
     networks:
       - intern-netzwerk 
       - db-netzwerk     
