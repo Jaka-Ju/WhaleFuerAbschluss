@@ -2,15 +2,15 @@ version: '3.8'
 
 services:
   # 1. Der Reverse Proxy (Eingangstor)
-  proxy:
-    image: 'jc21/nginx-proxy-manager:latest'
-    container_name: proxy
-    restart: unless-stopped
-    volumes:
-      - ./npm-data:/data
-      - ./npm-letsencrypt:/etc/letsencrypt
-    networks:
-      - Intern-netzwerk
+ # proxy:
+  #  image: 'jc21/nginx-proxy-manager:latest'
+   # container_name: proxy
+    #restart: unless-stopped
+    #volumes:
+     # - ./npm-data:/data
+      #- ./npm-letsencrypt:/etc/letsencrypt
+    #networks:
+     # - Intern-netzwerk
 
   # 2. Dein Webserver (wird das Dashboard)
   webserver:
