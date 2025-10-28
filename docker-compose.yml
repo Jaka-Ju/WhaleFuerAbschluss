@@ -6,10 +6,6 @@ services:
     image: 'jc21/nginx-proxy-manager:latest'
     container_name: proxy
     restart: unless-stopped
-    ports:
-      - '80:80'
-      - '443:443'
-      - '81:81'
     volumes:
       - ./npm-data:/data
       - ./npm-letsencrypt:/etc/letsencrypt
@@ -21,6 +17,9 @@ services:
     image: 'php:8.2-apache'
     container_name: webserver
     restart: unless-stopped
+    ports:
+      # Veröffentlicht den Webserver auf dem Standard-HTTP-Port (Port 80)
+      - '80:80'
     volumes:
       # Hier baust du dein Dashboard (index.php, index.html, etc.)
       - ./web:/var/www/html
@@ -34,6 +33,9 @@ services:
     image: 'nextcloud:latest'
     container_name: nextcloud
     restart: unless-stopped
+    ports:
+      # Veröffentlicht Nextcloud auf Port 8080. Du erreichst es über <IP>:8080
+      - '8080:80'
     volumes:
       - nextcloud-data:/var/www/html
     environment:
