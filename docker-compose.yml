@@ -14,8 +14,7 @@ services:
       - intern-netzwerk 
       - db-netzwerk     
     restart: unless-stopped 
-    depends_on:      
-      - db
+    
 
 
 networks:
