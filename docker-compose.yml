@@ -1,15 +1,10 @@
 
 services:
-  proxy:
-    build: ./nginx-proxy
-    ports:
-      - "80:80"
-    networks:
-      - intern-netzwerk 
-    restart: unless-stopped
 
   dashboard:
     build: ./webserver
+    ports:
+      - "80:80" 
     networks:
       - intern-netzwerk 
       - db-netzwerk     
