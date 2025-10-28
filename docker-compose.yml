@@ -1,57 +1,78 @@
+version: '3.8'
 
 services:
-  #proxy:
-   # build: ./nginx-proxy
-    #networks:
-     # - intern-netzwerk 
-    #restart: unless-stopped
-
-  dashboard:
-    build: ./webserver 
-    ports: # <--- DIESEN BLOCK HINZUFÜGEN
-      - "80:8080"
-    networks:
-      - intern-netzwerk 
-      - db-netzwerk     
-    restart: unless-stopped 
-    depends_on:      
-      - db
-
-  db:
-    image: mariadb:latest 
-    container_name: datenbank
+  # 1. Der Reverse Proxy (Eingangstor)
+  proxy:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: proxy
     restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
-      MYSQL_DATABASE: Lager_db # Wähle einen DB-Namen
-    
-    secrets: # Das Secret dem Service zuweisen
-      - db_root_password
+    ports:
+      - '80:80'
+      - '443:443'
+      - '81:81'
     volumes:
-      - db-daten:/var/lib/mysql # Speichert die Daten
-      - ./db-init:/docker-entrypoint-initdb.d
+      - ./npm-data:/data
+      - ./npm-letsencrypt:/etc/letsencrypt
     networks:
-      - db-netzwerk 
+      - Intern-netzwerk
 
-
-  adminer: #  Der Datenbank-Manager
-    image: adminer
-    container_name: adminer-ui
+  # 2. Dein Webserver (wird das Dashboard)
+  webserver:
+    image: 'php:8.2-apache'
+    container_name: webserver
     restart: unless-stopped
+    volumes:
+      # Hier baust du dein Dashboard (index.php, index.html, etc.)
+      - ./web:/var/www/html
     networks:
-      - intern-netzwerk 
-      - db-netzwerk     
+      - Intern-netzwerk
+      - Daten-netzwerk
+    # Kein Port! Zugriff nur über den Proxy
 
+  # 3. Nextcloud
+  nextcloud:
+    image: 'nextcloud:latest'
+    container_name: nextcloud
+    restart: unless-stopped
+    volumes:
+      - nextcloud-data:/var/www/html
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=Vollzeittrinker # ÄNDERN!
+    depends_on:
+      - db
+    networks:
+      - Intern-netzwerk
+      - Daten-netzwerk
+
+  # 4. Die Datenbank
+  db:
+    image: 'mariadb:latest'
+    container_name: db
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=Wurzelchef # ÄNDERN!
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=Vollzeittrinker # ÄNDERN!
+    networks:
+      - Daten-netzwerk
+
+# Definition der Docker-Netzwerke
 networks:
-  intern-netzwerk:
-    driver: bridge 
-  db-netzwerk:
+  Intern-netzwerk:
+    driver: bridge
+  Daten-netzwerk:
     driver: bridge
 
-
+# Definition der Docker-Volumes
 volumes:
-  db-daten: #dauerhafter Speicher auf Host
-  
-secrets:
-  db_root_password:
-    file: ./secrets/db_root_password.txt # Pfad zur erstellten Secret-Datei
+  npm-data:
+  npm-letsencrypt:
+  nextcloud-data:
+  db-data:
