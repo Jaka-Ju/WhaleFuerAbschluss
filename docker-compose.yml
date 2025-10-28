@@ -1,10 +1,10 @@
 
 services:
-  proxy:
-    build: ./nginx-proxy
-    networks:
-      - intern-netzwerk 
-    restart: unless-stopped
+  #proxy:
+   # build: ./nginx-proxy
+    #networks:
+     # - intern-netzwerk 
+    #restart: unless-stopped
 
   dashboard:
     build: ./webserver 
