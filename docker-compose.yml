@@ -24,6 +24,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
       MYSQL_DATABASE: Lager_db # Wähle einen DB-Namen
+    
+    secrets: # Das Secret dem Service zuweisen
+      - db_root_password
     volumes:
       - db-daten:/var/lib/mysql # Speichert die Daten
       - ./db-init:/docker-entrypoint-initdb.d
@@ -49,3 +52,6 @@ networks:
 volumes:
   db-daten: #dauerhafter Speicher auf Host
   
+secrets:
+  db_root_password:
+    file: ./secrets/db_root_password.txt # Pfad zur erstellten Secret-Datei
