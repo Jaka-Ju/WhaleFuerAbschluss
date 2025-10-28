@@ -23,6 +23,7 @@ services:
     volumes:
       # Hier baust du dein Dashboard (index.php, index.html, etc.)
       - ./web:/var/www/html
+    user: "1000"
     networks:
       - Intern-netzwerk
       - Daten-netzwerk
