@@ -22,7 +22,8 @@ services:
       - '80:80'
     volumes:
       # Hier baust du dein Dashboard (index.php, index.html, etc.)
-      - ./web:/var/www/html
+      - /home/potato/WhaleFuerabschluss/web:/var/www/html
+      - ./apache-custom.conf:/etc/apache2/sites-available/000-default.conf
     user: "1000"
     networks:
       - Intern-netzwerk
