@@ -1,0 +1,31 @@
+# Caddyfile
+
+# Global: Stellt sicher, dass Caddy das DDNS-Token für Let's Encrypt verwenden kann.
+{
+    # Wichtig, damit Caddy das Token nutzen kann, falls es Probleme mit der Port 80-Validierung gibt.
+    # Ersetze <DEIN_TOKEN> durch dein DuckDNS Token
+    acme_dns duckdns 7c1b8270-16e4-40aa-a5f0-0b280a0bbd7d
+}
+
+# 1. Dashboard (Dashboard.potato-server.duckdns.org)
+dashboard.hybridcloudpotatoserver.duckdns.org {
+    reverse_proxy webserver:80
+}
+
+# 2. Nextcloud (Nextcloud.potato-server.duckdns.org)
+nextcloud.hybridcloudpotatoserver.duckdns.org {
+    reverse_proxy nextcloud:80 {
+        transport http {
+            read_buffer 8192
+        }
+    }
+    # Zusätzliche Nextcloud-Header für große Uploads und saubere Weiterleitungen
+    client_max_body_size 1024m
+    redir /.well-known/carddav /remote.php/dav 301
+    redir /.well-known/caldav /remote.php/dav 301
+}
+
+# 3. Adminer (Adminer.potato-server.duckdns.org)
+adminer.hybridcloudpotatoserver.duckdns.org {
+    reverse_proxy adminer:8080
+}

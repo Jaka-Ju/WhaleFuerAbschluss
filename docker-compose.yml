@@ -1,91 +1,98 @@
-services:
-  # 1. Der Reverse Proxy (Eingangstor)
- # proxy:
-  #  image: 'jc21/nginx-proxy-manager:latest'
-  #   container_name: proxy
-  #   #restart: unless-stopped
-  #   #volumes:
-  #    # - ./npm-data:/data
-  #    #- ./npm-letsencrypt:/etc/letsencrypt
-  #   #networks:
-  #    # - Intern-netzwerk
+version: '3.8'
 
-  # 2. Dein Webserver (wird das Dashboard)
+services:
+  # 1. DDNS-Client: Hält deine Domain aktuell
+  duckdns:
+    image: linuxserver/duckdns
+    container_name: duckdns
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - TOKEN= 7c1b8270-16e4-40aa-a5f0-0b280a0bbd7d # <--- DEIN TOKEN HIER EINTRAGEN!
+      - SUBDOMAINS=hybridcloudpotatoserver           # <--- DEIN DOMAINNAME (OHNE .duckdns.org)
+      - LOGFILE=false
+    networks:
+      - Intern-netzwerk
+
+  # 2. Caddy als Reverse Proxy (HTTPS-Manager)
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    # Diese Ports müssen im Router an deinen Server weitergeleitet werden!
+    ports:
+      - '80:80'   # HTTP / Let's Encrypt Challenge
+      - '443:443' # HTTPS
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - Intern-netzwerk
+
+  # 3. Dein Webserver (Dashboard)
   webserver:
     image: 'php:8.2-apache'
     container_name: webserver
     restart: unless-stopped
-    ports:
-      # Veröffentlicht den Webserver auf dem Standard-HTTP-Port (Port 80)
-      - '80:80'
+    # KEINE PORTS MEHR! Zugriff nur über Caddy
     volumes:
-      # Hier baust du dein Dashboard (index.php, index.html, etc.)
       - /home/potato/WhaleFuerAbschluss/web:/var/www/html
       - ./apache-custom.conf:/etc/apache2/sites-available/000-default.conf
     user: "1000"
     networks:
       - Intern-netzwerk
       - Daten-netzwerk
-    # Kein Port! Zugriff nur über den Proxy
 
-  # 3. Nextcloud
+  # 4. Nextcloud
   nextcloud:
     image: 'nextcloud:latest'
     container_name: nextcloud
     restart: unless-stopped
-    ports:
-      # Veröffentlicht Nextcloud auf Port 8080. Du erreichst es über <IP>:8080
-      - '8080:80'
+    # KEINE PORTS MEHR! Zugriff nur über Caddy
     volumes:
       - nextcloud-data:/var/www/html
     environment:
-      - MYSQL_HOST=db
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD=Vollzeittrinker # ÄNDERN!
+      MYSQL_HOST: db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: Vollzeittrinker # ÄNDERN!
+      # WICHTIG: Sag Nextcloud, dass es Caddy vertrauen soll
+      TRUSTED_PROXIES: 'caddy'
+      OVERWRITEPROTOCOL: 'https'
     depends_on:
       - db
     networks:
       - Intern-netzwerk
       - Daten-netzwerk
 
-  # 4. Die Datenbank
+  # 5. Die Datenbank (für Nextcloud)
   db:
     image: 'mariadb:latest'
-    container_name: db
-    restart: unless-stopped
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
-    volumes:
-      - db-data:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=Wurzelchef # ÄNDERN!
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD=Vollzeittrinker # ÄNDERN!
+    # ... (Rest der Konfiguration)
     networks:
       - Daten-netzwerk
 
-  # 5. Datenbankverwaltung (Adminer)
+  # 6. Datenbankverwaltung (Adminer)
   adminer:
     image: 'adminer:latest'
     container_name: adminer
     restart: unless-stopped
-    ports:
-      # Adminer wird über Port 8081 zugänglich sein
-      - '8081:8080'
+    # KEINE PORTS MEHR! Zugriff nur über Caddy
     networks:
       - Daten-netzwerk
-      
-# Definition der Docker-Netzwerke
+      - Intern-netzwerk
+
 networks:
   Intern-netzwerk:
     driver: bridge
   Daten-netzwerk:
     driver: bridge
 
-# Definition der Docker-Volumes
 volumes:
-  npm-data:
-  npm-letsencrypt:
+  caddy-data:
+  caddy-config:
   nextcloud-data:
   db-data:
