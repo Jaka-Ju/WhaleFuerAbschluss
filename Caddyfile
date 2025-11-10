@@ -1,0 +1,18 @@
+:80 {
+    # 1. Nextcloud (http://<IP>/nextcloud)
+    handle_path /nextcloud/* {
+        # Wichtig: Der Container-Name gefolgt vom internen Port
+        reverse_proxy nextcloud:80
+    }
+    
+    # 2. Adminer (http://<IP>/adminer)
+    handle_path /adminer/* {
+        reverse_proxy adminer:8080
+    }
+    
+    # 3. Dein Dashboard (Root-Pfad)
+    # Alles andere (z.B. http://<IP>/) geht zum Dashboard
+    handle {
+        reverse_proxy webserver:80
+    }
+}
