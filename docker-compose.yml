@@ -5,7 +5,8 @@ services:
     image: 'php:8.2-apache'
     container_name: webserver
     restart: unless-stopped
-    # KEINE PORTS MEHR! Zugriff nur über Caddy
+    ports:
+      - "80:80"
     volumes:
       - /home/potato/WhaleFuerAbschluss/web:/var/www/html
       - ./apache-custom.conf:/etc/apache2/sites-available/000-default.conf
@@ -27,9 +28,8 @@ services:
       MYSQL_DATABASE: nextcloud
       MYSQL_USER: nextcloud
       MYSQL_PASSWORD: Vollzeittrinker # ÄNDERN!
-      # WICHTIG: Sag Nextcloud, dass es Caddy vertrauen soll
-      TRUSTED_PROXIES: 'caddy'
-      OVERWRITEPROTOCOL: 'https'
+    ports:
+      - "8080:80"
     depends_on:
       - db
     networks:
@@ -41,7 +41,6 @@ services:
     image: 'mariadb:latest'
     container_name: db
     restart: unless-stopped
-    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     volumes:
       - db-data:/var/lib/mysql
     environment:
@@ -57,7 +56,8 @@ services:
     image: 'adminer:latest'
     container_name: adminer
     restart: unless-stopped
-    # KEINE PORTS MEHR! Zugriff nur über Caddy
+    ports:
+      - "8081:80"
     networks:
       - Daten-netzwerk
       - Intern-netzwerk
@@ -69,7 +69,5 @@ networks:
     driver: bridge
 
 volumes:
-  caddy-data:
-  caddy-config:
   nextcloud-data:
   db-data:
