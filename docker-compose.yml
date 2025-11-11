@@ -1,15 +1,5 @@
 services:
-  # 1. Der Reverse Proxy (Eingangstor)
- # proxy:
-  #  image: 'jc21/nginx-proxy-manager:latest'
-  #   container_name: proxy
-  #   #restart: unless-stopped
-  #   #volumes:
-  #    # - ./npm-data:/data
-  #    #- ./npm-letsencrypt:/etc/letsencrypt
-  #   #networks:
-  #    # - Intern-netzwerk
-
+  
   # 2. Dein Webserver (wird das Dashboard)
   webserver:
     image: 'php:8.2-apache'
@@ -58,7 +48,7 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=Wurzelchef # ÄNDERN!
+      - #MYSQL_ROOT_PASSWORD=Wurzelchef # ÄNDERN!
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_PASSWORD=Vollzeittrinker # ÄNDERN!
