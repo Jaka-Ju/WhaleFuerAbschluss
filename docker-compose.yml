@@ -57,7 +57,7 @@ services:
     container_name: adminer
     restart: unless-stopped
     ports:
-      - "8081:80"
+      - "8081:8080"
     networks:
       - Daten-netzwerk
       - Intern-netzwerk
