@@ -45,7 +45,7 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      - #MYSQL_ROOT_PASSWORD=Wurzelchef # ÄNDERN!
+      #- MYSQL_ROOT_PASSWORD=Wurzelchef # ÄNDERN!
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_PASSWORD=Vollzeittrinker # ÄNDERN!
