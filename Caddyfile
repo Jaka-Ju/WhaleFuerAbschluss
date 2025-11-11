@@ -1,0 +1,23 @@
+:80 {
+    # Dieser Block lauscht auf allen IPs/Hostnamen auf Port 80 (HTTP).
+
+    # Wichtig: Wir unterdrücken die automatische TLS/SSL-Funktion
+    # Wir benutzen hier nur HTTP!
+    
+    # 1. Dashboard (Standard)
+    # Alles, was nicht /nextcloud oder /adminer ist, wird zum Dashboard geschickt.
+    @dashboard host *
+    handle @dashboard {
+        reverse_proxy webserver:80
+    }
+    
+    # 2. Nextcloud (http://<SERVER-IP>/nextcloud)
+    handle_path /nextcloud/* {
+        reverse_proxy nextcloud:80
+    }
+    
+    # 3. Adminer (http://<SERVER-IP>/adminer)
+    handle_path /adminer/* {
+        reverse_proxy adminer:8080
+    }
+}

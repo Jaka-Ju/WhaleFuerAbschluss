@@ -5,41 +5,38 @@ services:
     image: 'php:8.2-apache'
     container_name: webserver
     restart: unless-stopped
-    ports:
-      # Veröffentlicht den Webserver auf dem Standard-HTTP-Port (Port 80)
-      - '80:80'
+    # KEINE PORTS MEHR! Zugriff nur über Caddy
     volumes:
-      # Hier baust du dein Dashboard (index.php, index.html, etc.)
       - /home/potato/WhaleFuerAbschluss/web:/var/www/html
       - ./apache-custom.conf:/etc/apache2/sites-available/000-default.conf
     user: "1000"
     networks:
       - Intern-netzwerk
       - Daten-netzwerk
-    # Kein Port! Zugriff nur über den Proxy
 
-  # 3. Nextcloud
+  # 4. Nextcloud
   nextcloud:
     image: 'nextcloud:latest'
     container_name: nextcloud
     restart: unless-stopped
-    ports:
-      # Veröffentlicht Nextcloud auf Port 8080. Du erreichst es über <IP>:8080
-      - '8080:80'
+    # KEINE PORTS MEHR! Zugriff nur über Caddy
     volumes:
       - nextcloud-data:/var/www/html
     environment:
-      - MYSQL_HOST=db
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD=Vollzeittrinker # ÄNDERN!
+      MYSQL_HOST: db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: Vollzeittrinker # ÄNDERN!
+      # WICHTIG: Sag Nextcloud, dass es Caddy vertrauen soll
+      TRUSTED_PROXIES: 'caddy'
+      OVERWRITEPROTOCOL: 'https'
     depends_on:
       - db
     networks:
       - Intern-netzwerk
       - Daten-netzwerk
 
-  # 4. Die Datenbank
+  # 5. Die Datenbank (für Nextcloud)
   db:
     image: 'mariadb:latest'
     container_name: db
@@ -55,27 +52,24 @@ services:
     networks:
       - Daten-netzwerk
 
-  # 5. Datenbankverwaltung (Adminer)
+  # 6. Datenbankverwaltung (Adminer)
   adminer:
     image: 'adminer:latest'
     container_name: adminer
     restart: unless-stopped
-    ports:
-      # Adminer wird über Port 8081 zugänglich sein
-      - '8081:8080'
+    # KEINE PORTS MEHR! Zugriff nur über Caddy
     networks:
       - Daten-netzwerk
-      
-# Definition der Docker-Netzwerke
+      - Intern-netzwerk
+
 networks:
   Intern-netzwerk:
     driver: bridge
   Daten-netzwerk:
     driver: bridge
 
-# Definition der Docker-Volumes
 volumes:
-  npm-data:
-  npm-letsencrypt:
+  caddy-data:
+  caddy-config:
   nextcloud-data:
   db-data:
