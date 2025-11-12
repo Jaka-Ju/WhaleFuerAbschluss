@@ -20,7 +20,6 @@ services:
     image: 'nextcloud:latest'
     container_name: nextcloud
     restart: unless-stopped
-    # KEINE PORTS MEHR! Zugriff nur über Caddy
     volumes:
       - nextcloud-data:/var/www/html
     environment:
