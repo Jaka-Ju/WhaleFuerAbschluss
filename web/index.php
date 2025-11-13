@@ -1,11 +1,11 @@
 <?php
 // === Verbindung zur Datenbank ===
-$host = "localhost";     
+$host = "db";     
 $benutzer = "root";      
 $pass = "Wurzelchef";           
 $db   = "User";          
 
-$conn = new mysql($host, $benutzer, $pass, $db);
+$conn = new mysqli($host, $benutzer, $pass, $db);
 
 if ($conn->connect_error) {
     die("Verbindung zur Datenbank fehlgeschlagen: " . $conn->connect_error);

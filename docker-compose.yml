@@ -2,7 +2,7 @@ services:
   
   # 2. Dein Webserver (wird das Dashboard)
   webserver:
-    image: 'php:8.2-apache'
+    build: .
     container_name: webserver
     restart: unless-stopped
     ports:
