@@ -10,7 +10,7 @@ services:
     volumes:
       - /home/potato/WhaleFuerAbschluss/web:/var/www/html
       - ./apache-custom.conf:/etc/apache2/sites-available/000-default.conf
-    user: "1000"
+    #user: "1000"
     networks:
       - Intern-netzwerk
       - Daten-netzwerk
