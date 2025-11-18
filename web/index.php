@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
-            if (password_verify($password, $user["password"])) {
+            if (password_verify($password, $user["passwort"])) {
                 $_SESSION["username"] = $user["username"];
                 header("Location: hauptseite.php");
                 exit;
