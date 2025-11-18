@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($username && $email && $password) {
             // Prüfen ob User existiert
-            $check = $conn->prepare("SELECT Benutzer_id FROM Benutzer WHERE username = ? OR email = ?");
+            $check = $conn->prepare("SELECT Benutzer_id FROM Benutzer WHERE Benutzername = ? OR Email = ?");
             $check->bind_param("ss", $username, $email);
             $check->execute();
             $result = $check->get_result();
