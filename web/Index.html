@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server-Hauptseite</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /*zwei spalten gleich groß*/
+      grid-template-rows: 1fr 1fr;    /*zwei reihen gleich groß*/
+      height: 100%;
+      width: 100%;
+    }
+
+    .box1 { background: red; }
+    .box2 { background: yellowgreen; }
+    .box3 { background: green; }
+    .box4 { background: orange; }
+
+    .signout-btn {
+      position: absolute;          /* Innerhalb der Box unten rechts fixieren */
+      bottom: 5px;                /* 20px vom unteren Rand */
+      right: 5px;                 /* 20px vom rechten Rand */
+      border-radius: 8px;          /* Leicht abgerundete Ecken */
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <button class="box box1" onclick="location.href='http://192.168.137.111.8080'"><h1>Cloud Menü</h1></button>
+    <button class="box box2" onclick="location.href='index.html'"><h1>Upload</h1></button>
+    <button class="box box3" onclick="location.href='index.html'"><h1>Bilder</h1></button>
+    <button class="box box4" onclick="location.href='index.html'"><h1>Backup</h1></button>
+
+    <button class="signout-btn" onclick="location.href='index.html'">
+        Sign Out
+      </button>
+  </div>
+</body>
+</html>
