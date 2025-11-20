@@ -9,7 +9,7 @@ $host = "db";
 $benutzer = "root";
 $pass = "Wurzelchef";
 $db = "User";
-
+//dhudghkrh
 $conn = new mysqli($host, $benutzer, $pass, $db);
 
 if ($conn->connect_error) {
