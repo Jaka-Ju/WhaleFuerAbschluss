@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 $host = "db";
 $benutzer = "root";
 $pass = "Wurzelchef";
-$db = "Benutzer";
+$db = "User";
 
 $conn = new mysqli($host, $benutzer, $pass, $db);
 
