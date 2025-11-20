@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             if ($passwort === $benutzer["passwort"]) {
                 $_SESSION["benutzer"] = $benutzer["Benutzername"];
-                header("Location: hauptseite.php");
+                header("Location: Index.html");
                 exit;
             } else {
                 $message = "<div style='color:red'>Benutzername oder Passwort falsch!</div>";
